@@ -5,6 +5,8 @@
       var CLIENT_ID = '169082029903.apps.googleusercontent.com';
       var SCOPES = 'https://www.googleapis.com/auth/drive';
 
+      var currentFiles = null;
+
       /**
        * Called when the client library is loaded to start the auth flow.
        */
@@ -87,10 +89,23 @@
       function showFiles(folderId) {
         var request = gapi.client.request({
             'path': '/drive/v2/files/' + folderId + '/children',
-            'method': 'GET'
+            'method': 'GET',
+            'params': {
+              'q': "mimeType != 'application/vnd.google-apps.folder'"  
+          }
         });
         request.execute(function(resp) {
-            console.log(resp.items);
+            var i, filesList = document.createElement('ul'), file;
+            for (i=0; i < resp.items.length; i += 1){
+                file = document.createElement('li');
+                file.innerHTML = resp.items[i].title + ' [' + resp.items[i].mimeType + ']';
+                filesList.appendChild(file);
+            }
+            if (currentFiles) {
+               document.getElementById('files').removeChild(currentFiles);
+            }
+            document.getElementById('files').appendChild(filesList);
+            currentFiles = filesList;
         });
       }
 

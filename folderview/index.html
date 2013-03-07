@@ -70,8 +70,16 @@
           }
         });
         request.execute(function(resp){
-          var data = resp.items;
-          console.log(data);
+          var data = resp.items, i, list, item, anchor;
+          list = document.createElement('ul');
+          for (i=0; i < data.length; i += 1) {
+              item = document.createElement('li');
+              anchor = document.createElement('a');
+              anchor.innerHTML = data[i].title;
+              anchor.href = "javascript: showFiles(" + data[i].id + ");";
+              list.appendChild(item);
+          }
+          document.getElementById('folder').appendChild(list);
         });
       }
 
@@ -83,6 +91,7 @@
     <!--Add a file picker for the user to start the upload process -->
     <input type="button" id="listFolder" style="display: none" value="Mostrar Directorio" />
     <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
-    <div id="content"></div>
+    <div id="folders"></div>
+    <div id="files"></div>
   </body>
 </html>

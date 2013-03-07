@@ -88,10 +88,10 @@
 
       function showFiles(folderId) {
         var request = gapi.client.request({
-            'path': '/drive/v2/files/' + folderId + '/children',
+            'path': '/drive/v2/files/',
             'method': 'GET',
             'params': {
-              'q': "mimeType != 'application/vnd.google-apps.folder'"  
+              'q': "'" + folderId + "' in parents"  
           }
         });
         request.execute(function(resp) {

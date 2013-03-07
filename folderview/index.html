@@ -65,7 +65,9 @@
         var request = gapi.client.request({
           'path': '/drive/v2/files',
           'method': 'GET',
-          'q': "mimeType = 'application/vnd.google-apps.folder'"
+          'params': {
+              'q': "mimeType = 'application/vnd.google-apps.folder'"  
+          }
         });
         request.execute(function(resp){
           var data = resp.items;

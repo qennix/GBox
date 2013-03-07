@@ -91,7 +91,7 @@
             'path': '/drive/v2/files/',
             'method': 'GET',
             'params': {
-              'q': "'" + folderId + "' in parents"  
+              'q': "'" + folderId + "' in parents and mimeType != 'application/vnd.google-apps.folder'"  
           }
         });
         request.execute(function(resp) {
@@ -116,9 +116,11 @@
   </head>
   <body>
     <!--Add a file picker for the user to start the upload process -->
-    <input type="button" id="listFolder" style="display: none" value="Mostrar Directorio" />
-    <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
+    <input type="button" id="listFolder" style="display: none" value="Mostrar Carpetas" />
+    <input type="button" id="authorizeButton" style="display: none" value="Autorizar Aplicacion" />
+    <h1>Listado de Carpetas</h1>
     <div id="folders"></div>
+    <h1>Listado de Archivos</h1>
     <div id="files"></div>
   </body>
 </html>

@@ -95,6 +95,7 @@
           }
         });
         request.execute(function(resp) {
+            console.log(resp.items);
             var i, filesList = document.createElement('ul'), file;
             for (i=0; i < resp.items.length; i += 1){
                 file = document.createElement('li');

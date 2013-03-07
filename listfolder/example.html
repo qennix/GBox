@@ -8,9 +8,9 @@
         'https://www.googleapis.com/auth/drive.file',
         'https://www.googleapis.com/auth/drive.readonly'];
 
-      var callback = function(data) {
-        console.log(data);
-      }
+      // var callback = function(data) {
+      //   console.log(data);
+      // }
 
       /**
        * Called when the client library is loaded to start the auth flow.
@@ -41,7 +41,7 @@
         if (authResult && !authResult.error) {
           // Access token has been successfully retrieved, requests can be sent to the API.
           listFolder.style.display = 'block';
-          listFolder.onchange = retrieveAllFiles(callback);
+          listFolder.onchange = retrieveAllFiles;
         } else {
           // No access token could be retrieved, show the button to start the authorization flow.
           authButton.style.display = 'block';
@@ -72,23 +72,34 @@
        * @param {Function} callback Function to call when the request is complete.
        */
 
-      function retrieveAllFiles(callback) {
-        var retrievePageOfFiles = function(request, result) {
-          request.execute(function(resp) {
-            result = result.concat(resp.items);
-            var nextPageToken = resp.nextPageToken;
-            if (nextPageToken) {
-              request = gapi.client.drive.files.list({
-                'pageToken': nextPageToken
-              });
-              retrievePageOfFiles(request, result);
-            } else {
-              callback(result);
-            }
-          });
-        }
-        var initialRequest = gapi.client.drive.files.list();
-        retrievePageOfFiles(initialRequest, []);
+      // function retrieveAllFiles(callback) {
+      //   var retrievePageOfFiles = function(request, result) {
+      //     request.execute(function(resp) {
+      //       result = result.concat(resp.items);
+      //       var nextPageToken = resp.nextPageToken;
+      //       if (nextPageToken) {
+      //         request = gapi.client.drive.files.list({
+      //           'pageToken': nextPageToken
+      //         });
+      //         retrievePageOfFiles(request, result);
+      //       } else {
+      //         callback(result);
+      //       }
+      //     });
+      //   }
+      //   var initialRequest = gapi.client.drive.files.list();
+      //   retrievePageOfFiles(initialRequest, []);
+      // }
+
+      function retrieveAllFiles() {
+
+        var request = gapi.client.request({
+          'path': '/drive/v2/files',
+          'method': 'GET'
+        });
+        request.execute(function(resp){
+          console.log(resp);
+        });
       }
 
 

@@ -77,6 +77,7 @@
               anchor = document.createElement('a');
               anchor.innerHTML = data[i].title;
               anchor.href = "javascript: showFiles(" + data[i].id + ");";
+              item.appendChild(anchor);
               list.appendChild(item);
           }
           document.getElementById('folders').appendChild(list);

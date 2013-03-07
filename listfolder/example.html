@@ -3,7 +3,10 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <script type="text/javascript">
       var CLIENT_ID = '169082029903.apps.googleusercontent.com';
-      var SCOPES = 'https://www.googleapis.com/auth/drive.file';
+      var SCOPES = [
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/drive.file',
+        'https://www.googleapis.com/auth/drive.readonly'];
 
       var callback = function(data) {
         console.log(data);

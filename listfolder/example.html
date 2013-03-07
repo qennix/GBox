@@ -41,7 +41,9 @@
         if (authResult && !authResult.error) {
           // Access token has been successfully retrieved, requests can be sent to the API.
           listFolder.style.display = 'block';
-          listFolder.onchange = retrieveAllFiles;
+          listFolder.onclick = function() {
+              retrieveAllFiles();
+          };
         } else {
           // No access token could be retrieved, show the button to start the authorization flow.
           authButton.style.display = 'block';

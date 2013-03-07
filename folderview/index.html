@@ -76,11 +76,21 @@
               item = document.createElement('li');
               anchor = document.createElement('a');
               anchor.innerHTML = data[i].title;
-              anchor.href = "javascript: showFiles(" + data[i].id + ");";
+              anchor.href = "javascript: showFiles('" + data[i].id + "'');";
               item.appendChild(anchor);
               list.appendChild(item);
           }
           document.getElementById('folders').appendChild(list);
+        });
+      }
+
+      function showFiles(folderId) {
+        var request = gapi.client.request({
+            'path': '/drive/v2/files/' + folderId + '/children',
+            'method': 'GET'
+        });
+        request.execute(function(resp) {
+            console.log(resp.items);
         });
       }
 

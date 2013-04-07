@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/jquery-ui-1.9.2.custom.min.css">
+        <link rel="stylesheet" href="css/layout-default-latest.css">
+        <link rel="stylesheet" href="css/jquery.dataTables.css">
+        <link rel="stylesheet" href="css/swoop.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div id="swoop">
+                <div class="pane ui-layout-north">
+                    <img src="img/swoop_logo.png" alt="Startup Weekend Event Historial" />
+                    <span id="signinButton" class="pane">
+                      <span
+                        class="g-signin"
+                        data-callback="signinCallback"
+                        data-clientid="29759546077.apps.googleusercontent.com"
+                        data-cookiepolicy="single_host_origin"
+                        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                        data-scope="https://www.googleapis.com/auth/plus.login"
+                        >
+                      </span>
+                    </span>
+                    <span id="profileSpan" class="pane">
+                        <div><img id="profile_img" src="" /></div>
+                        <div>
+                            <a id="profile_user" target='_blank'></a><br />
+                            <a href="javascript:disconnectUser();">Sign out</a>
+                        </div>
+                    </span>
+                </div>
+                <div id='centerPanel' class="pane ui-layout-center">Center</div>
+                <div class="pane ui-layout-east" id="eastPanel"><center>REGION</center><br/>
+                    <div id="selector"></div>
+                    <ul id="regionMenu">
+                        <li><a id="it_all" class="menuItem selected" href="javascript: swoop.setRegion('all', true);">World</a></li>
+                        <li><a id="it_NA" class="menuItem" href="javascript: swoop.setRegion('NA', true);">North America</a></li>
+                        <li><a id="it_SA" class="menuItem" href="javascript: swoop.setRegion('SA', true);">South America</a></li>
+                        <li><a id="it_EU" class="menuItem" href="javascript: swoop.setRegion('EU', true);">Europe</a></li>
+                        <li><a id="it_AF" class="menuItem" href="javascript: swoop.setRegion('AF', true);">Africa</a></li>
+                        <li><a id="it_AS" class="menuItem" href="javascript: swoop.setRegion('AS', true);">Asia</a></li>
+                        <li><a id="it_OC" class="menuItem" href="javascript: swoop.setRegion('OC', true);">Oceania</a></li>
+                    </ul>
+                </div>
+                <div class="pane ui-layout-south south_panel">
+                    <span style="float:left;">TIMELINE</span><span style="float: right;" id="timeline_label">All Time</span>
+                    <div id="timeline" style="width: 60%; margin: auto;"></div>    
+                </div>
+        </div>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="js/vendor/jquery-ui-1.9.2.custom.min.js"></script>
+        <script src="js/vendor/jquery.layout-latest.min.js"></script>
+        <script src="js/vendor/jquery.ui.touch-punch.min.js"></script>
+        <script src="js/vendor/jquery.dataTables.min.js"></script>
+        <!--script src="js/plugins.js"></script-->
+        <script src="js/google.js"></script>
+        <script src="js/countries.js"></script>
+        <script src="js/swoop.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            var _gaq=[['_setAccount','UA-25441843-2'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+        <!-- Place this asynchronous JavaScript just before your </body> tag -->
+        <script type="text/javascript">
+          (function() {
+           var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+           po.src = 'https://apis.google.com/js/client:plusone.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+         })();
+        </script>
+    </body>
+</html>

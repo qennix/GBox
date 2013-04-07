@@ -35,7 +35,7 @@ SWOOP = function () {
 					self.prepareRegions();
 					self.prepareTimeLine();
 					self.renderPage();
-					self.showData();
+					//self.showData();
 				}	
 			});
 		},
@@ -208,11 +208,35 @@ SWOOP = function () {
 			html += '</div>';
 			$('#centerPanel').html(html);
 			if (signed) {
-
+				currentNode = startNode;
+				$('#centerPanel').append('<div id="dataDisplay"><div id="dv_prev"></div><div id="dv_data"></div><div id="dv_next"></div></div>');
+				$('#dv_prev').click(function(e){
+					swoop.gotoPrev();
+				}).mouseover(function(){
+					if (swoop.getPrevNode()) {
+						$('#dv_prev').addClass('hover');
+					}
+				}).mouseout(function(){
+					if (swoop.getPrevNode()) {
+						$('#dv_prev').removeClass('hover');
+					}
+				});
+				$('#dv_next').click(function(e){
+					swoop.gotoNext();
+				}).mouseover(function(){
+					if (swoop.getNextNode()) {
+						$('#dv_next').addClass('hover');
+					}
+				}).mouseout(function(){
+					if (swoop.getNextNode()) {
+						$('#dv_next').removeClass('hover');
+					}
+				});
+				this.drawNavBars();
+				this.drawCurrentEvent();
 			} else {
 				aoColumns = [
 					{ "sTitle": "Country" },
-		            //{ "sTitle": "State" },
 		            { "sTitle": "City" },
 		            { "sTitle": "Date", "sClass": "center" },
 		            { "sTitle": "WebSite", "sClass":"right"}
@@ -281,6 +305,8 @@ SWOOP = function () {
 			node = currentNode.prev;
 			if (update) {
 				currentNode = node;
+				this.drawNavBars();
+				this.drawCurrentEvent();
 			}
 			return node;
 		},
@@ -289,6 +315,8 @@ SWOOP = function () {
 			node = currentNode.next;
 			if (update) {
 				currentNode = node;
+				this.drawNavBars();
+				this.drawCurrentEvent();
 			}
 			return node;
 		},
@@ -322,7 +350,6 @@ SWOOP = function () {
 		setSigned: function (state, user, t) {
 			signed = state;
 			user = user;
-			//console.log(user);
 			token = t || null;
 			if (signed) {
 				$('#profile_user').html(user.displayName);
@@ -338,6 +365,33 @@ SWOOP = function () {
 		},
 		getToken: function () {
 			return token;
+		},
+		drawNavBars: function () {
+			if (currentNode && currentNode.prev) {
+				$('#dv_prev').removeClass().addClass('enabled_left');
+			} else {
+				$('#dv_prev').removeClass().addClass('disabled_left');
+			}
+			if (currentNode && currentNode.next) {
+				$('#dv_next').removeClass().addClass('enabled_right');
+			} else {
+				$('#dv_next').removeClass().addClass('disabled_right');
+			}
+		},
+		drawCurrentEvent: function() {
+			var txt = '';
+			txt += 'City: ' + currentNode.city;
+			$('#dv_data').html(txt);
+		},
+		gotoNext: function () {
+			if (currentNode && currentNode.next) {
+				this.getNextNode(true);
+			}
+		},
+		gotoPrev: function () {
+			if (currentNode && currentNode.prev) {
+				this.getPrevNode(true);
+			}
 		}
 	};
 };

@@ -151,7 +151,15 @@ table.dataTable tr.odd { background-color: #E0FFE0; }
 	background-color: #EEFFEE;
 }
 
+#summaryMap{
+	width: 100%;
+	height: 100%;
+}
+
 #dv_data {
-	/*width: 100%; */
+	width: auto;
+	height: 100%;
 	float: left;
+	display: inline-block;
+	margin: 3px;
 }

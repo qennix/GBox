@@ -1,7 +1,8 @@
 var SWOOP,
 	SWEvent,
 	SWLocation,
-	SWFacilitator;
+	SWFacilitator,
+	SWSummary;
 
 SWOOP = function () {
 	var events = [],
@@ -46,9 +47,9 @@ SWOOP = function () {
 			return ok; 
 		},
 		prepareTimeLine: function () {
-			var i, count = 0;
-			startNode = null;
-			endNode = null;
+			var i, count = 0, summary = new SWSummary();
+			startNode = summary;
+			endNode = summary;
 			for (i = 0; i < events.length; i += 1) {
 				events[i].next = null;
 				events[i].prev = null;
@@ -244,15 +245,17 @@ SWOOP = function () {
 				current = startNode;
 				aaData = [];
 				while(current) {
-					aRow = [];
-					aRow.push(current.country);
-					aRow.push(current.city);
+					if (current.type !== 'SWSummary') {
+						aRow = [];
+						aRow.push(current.country);
+						aRow.push(current.city);
 
-					tmpDate = new Date(current.start_date);
-					aRow.push(tmpDate.getMonth() + '/' + tmpDate.getDate() + '/' + tmpDate.getFullYear());
+						tmpDate = new Date(current.start_date);
+						aRow.push(tmpDate.getMonth() + '/' + tmpDate.getDate() + '/' + tmpDate.getFullYear());
 
-					aRow.push("<a target='_blank' href='//" + current.website + "'>" + current.website + "</a>");
-					aaData.push(aRow);
+						aRow.push("<a target='_blank' href='//" + current.website + "'>" + current.website + "</a>");
+						aaData.push(aRow);
+					}
 					current = current.next;
 				}
 
@@ -380,8 +383,27 @@ SWOOP = function () {
 		},
 		drawCurrentEvent: function() {
 			var txt = '';
-			txt += 'City: ' + currentNode.city;
-			$('#dv_data').html(txt);
+			if (currentNode.type === 'SWSummary') {
+				txt = '<div id="summaryMap">JJJ</div>';
+				$('#dv_data').html(txt);
+				$('#dv_data').width($('#centerPanel').width() - 70);
+				var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+        		var mapOptions = {
+		          zoom: 4,
+		          center: myLatlng,
+		          mapTypeId: google.maps.MapTypeId.ROADMAP
+		        }
+        		var map = new google.maps.Map(document.getElementById('summaryMap'), mapOptions);
+
+		        var marker = new google.maps.Marker({
+		            position: myLatlng,
+		            map: map,
+		            title: 'Hello World!'
+		        });
+			} else {
+				txt += 'City: ' + currentNode.city;
+				$('#dv_data').html(txt);
+			}	
 		},
 		gotoNext: function () {
 			if (currentNode && currentNode.next) {
@@ -419,6 +441,7 @@ SWEvent = function (options) {
 	this.location = this.locationFactory(defaults.location);
 	this.facilitators = this.facilitatorsFactory(defaults.facilitators);
 };
+SWEvent.prototype.type = "SWEvent";
 
 SWEvent.prototype.locationFactory = function (options) {
 	var output = null;
@@ -461,6 +484,14 @@ SWFacilitator = function (options) {
 SWFacilitator.prototype.getGPlus = function () {
 	//TODO Implement Google + API
 };
+
+SWSummary = function () {
+	this.next = null;
+	this.prev = null;
+	this.start_date = "2000-01-01T00:00:00.000Z";
+};
+
+SWSummary.prototype.type = "SWSummary";
 
 
 

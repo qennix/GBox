@@ -163,3 +163,71 @@ table.dataTable tr.odd { background-color: #E0FFE0; }
 	display: inline-block;
 	margin: 3px;
 }
+
+#detailEvent{
+	border-radius: 5px;
+	border: solid 1px #808080;
+}
+
+td.title {
+	background-color: #F0F0F0;
+	font-weight: bolder;
+}
+td.data {
+	font-weight: bold;
+	text-align: left;
+	width: 60%;
+}
+
+#eventDetails{
+	overflow: auto;
+	height: 100%;
+}
+
+#dvHeader{
+	border-radius: 4px;
+	padding: 7px;
+	height: 26px;
+	border: solid 1px #000000;
+	margin: 2px;
+}
+
+.eventID {
+	float: left;
+}
+.eventDate {
+	float: right;
+}
+#detailMap {
+	width: 100%;
+	height: 200px;
+}
+
+#detailURL {
+	text-align: center;
+	width: 100%;
+	height: 40px;
+}
+
+.detailSection{
+	border-radius: 4px;
+	padding: 0px;	
+	border: solid 1px #A0A0A0;
+	margin: 2px;
+}
+.detailSection > span {
+	background-color: #F0F0F0;
+	font-weight: bolder;
+	display: block;
+	padding: 4px;
+}
+
+#detailURL > a {
+	text-decoration: none;
+	font-size: 18pt;
+}
+#twitterHT {
+	text-align: center;
+	font-size: 18pt;
+	font-weight: bolder;
+}

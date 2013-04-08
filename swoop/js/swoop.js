@@ -18,7 +18,16 @@ SWOOP = function () {
 		periodArray = null,
 		signed = false,
 		user = null, 
-		token = null;
+		token = null,
+		continents = {
+				'all': 'World',
+				'NA': 'North America',
+				'SA': 'South America',
+				'EU': 'Europe',
+				'AF': 'Africa',
+				'AS': 'Asia',
+				'OC': 'Oceania'
+		};
 
 	return {
 		init: function () {
@@ -193,16 +202,7 @@ SWOOP = function () {
 			});
 		},
 		showData: function () {
-			var regions = {
-				'all': 'World',
-				'NA': 'North America',
-				'SA': 'South America',
-				'EU': 'Europe',
-				'AF': 'Africa',
-				'AS': 'Asia',
-				'OC': 'Oceania'
-			};
-			var html = '<div id="detailTop"><strong>' + swoop.getTotal() + '</strong> Event(s) found @ ' + regions[region] + ' in ' + periodArray[periodIndex].text; 
+			var html = '<div id="detailTop"><strong>' + swoop.getTotal() + '</strong> Event(s) found @ ' + continents[region] + ' in ' + periodArray[periodIndex].text; 
 			if (!signed) {
 				html += '    (<small>Please Sign In with Google+ account to have more details</small>)';
 			}
@@ -251,7 +251,7 @@ SWOOP = function () {
 						aRow.push(current.city);
 
 						tmpDate = new Date(current.start_date);
-						aRow.push(tmpDate.getMonth() + '/' + tmpDate.getDate() + '/' + tmpDate.getFullYear());
+						aRow.push((tmpDate.getMonth() + 1) + '/' + tmpDate.getDate() + '/' + tmpDate.getFullYear());
 
 						aRow.push("<a target='_blank' href='//" + current.website + "'>" + current.website + "</a>");
 						aaData.push(aRow);
@@ -384,16 +384,11 @@ SWOOP = function () {
 		drawCurrentEvent: function() {
 			var txt = '', mapOptions, map;
 			if (currentNode.type === 'SWSummary') {
-				txt = '<div id="summaryMap">JJJ</div>';
+				txt = '<div id="summaryMap"></div>';
 				$('#dv_data').html(txt);
 				$('#dv_data').width($('#centerPanel').width() - 70);
-				//var myLatlng = 
+
         		mapOptions = currentNode.getMapOptions(region);
-        		// {
-		        //   zoom: 4,
-		        //   center: myLatlng,
-		        //   mapTypeId: google.maps.MapTypeId.ROADMAP
-		        // }
         		map = new google.maps.Map(document.getElementById('summaryMap'), mapOptions);
 
         		curr = currentNode.next;
@@ -417,9 +412,7 @@ SWOOP = function () {
 	        				} else {
 	        					address = curr.city + ', ' + curr.country;
 	        				}
-	        				//aux = curr;
 	        				geocoder.geocode( { 'address': address}, function(results, status) {
-	        					//console.log(results);
 					          	if (status == google.maps.GeocoderStatus.OK) {
 						            marker = new google.maps.Marker({
 						                map: map,
@@ -436,8 +429,7 @@ SWOOP = function () {
         			curr = curr.next;
         		}
 			} else {
-				txt += 'City: ' + currentNode.city;
-				$('#dv_data').html(txt);
+				this.createEventDetails(currentNode);
 			}	
 		},
 		gotoNext: function () {
@@ -454,7 +446,112 @@ SWOOP = function () {
 			currentNode = node;
 			this.drawNavBars();
 			this.drawCurrentEvent();
-		}
+		},
+		createEventDetails: function (node) {
+			var html = '';
+			$('#dv_data').html('<div id="eventDetails"></div>');
+			$('#dv_data').width($('#centerPanel').width() - 70);
+			eventDate = new Date(node.start_date);
+			
+			//INDEX DETAILS
+			html = '';
+			html += '<div id="dvHeader"><span class="eventID">Event ID: <strong>' + node.id + '</strong></span>';
+			html += '<span class="eventDate"><strong>' + this.formatDate(eventDate) + '</strong></span></div>'
+			$('#eventDetails').append(html);
+
+			//EVENT DETAILS
+			html = '<div class="detailSection"><span>Event Details</span>'; 
+			html += '<table cellpadding="5" cellspacing="0" width="100%">';
+			html += '<tr><td>City</td><td class="data">' + node.city + '</td></tr>';
+			if (node.state) { html += '<tr><td>State</td><td class="data">' + node.state + '</td></tr>'; }
+			html += '<tr><td>Country</td><td class="data">' + node.country + '</td></tr>';
+			if (node.vertical) { html += '<tr><td>Vertical</td><td class="data">' + node.vertical + '</td></tr>';}
+			html += '</table>';
+			html += '</div>';
+			$('#eventDetails').append(html);
+			//WEBSITE
+			html = '<div class="detailSection"><span>Website</span>'; 
+			html += '<div id="detailURL"><a target="_blank" href="//' + node.website + '">' + node.website + '</a></div>';
+			html += '</div>';
+			$('#eventDetails').append(html);
+			//FACILITATORS
+			if (node.facilitators && node.facilitators.length > 0) {
+				html = '<div class="detailSection"><span>Facilitators</span>'; 
+				html += '<table cellpadding="5" cellspacing="0" width="100%">';
+				for (i = 0; i < node.facilitators.length; i += 1) {
+					html += '<tr><td>Name:</td><td class="data">' + node.facilitators[i].name + '</td></tr>';
+				}
+				html += '</table>';
+				html += '</div>';
+				$('#eventDetails').append(html);
+			}
+
+			//LOCATION
+			html = '<div class="detailSection">';
+			html += '<div id="detailMap"></div></div>';
+			$('#eventDetails').append(html);
+			if (node.location.lat && node.location.lng) {
+				mapOptions = startNode.getMapOptions(node.region);
+				mapOptions.zoom = 12;
+				mapOptions.position = new google.maps.LatLng(node.location.lat, node.location.lng);
+				map = new google.maps.Map(document.getElementById('detailMap'), mapOptions);
+	        	map.setCenter(mapOptions.position);
+	        	marker = new google.maps.Marker({
+					position: mapOptions.position,
+					map: map,
+					title: node.city
+        		});
+        	} else {
+				mapOptions = startNode.getMapOptions(node.region);
+				map = new google.maps.Map(document.getElementById('detailMap'), mapOptions);
+        		geocoder = new google.maps.Geocoder();
+				if (node.state) {
+					address = node.city + ', ' + node.state + ' ' + node.country;
+				} else {
+					address = node.city + ', ' + node.country;
+				}
+				geocoder.geocode( { 'address': address}, function(results, status) {
+		          	if (status == google.maps.GeocoderStatus.OK) {
+			            marker = new google.maps.Marker({
+			                map: map,
+			                position: results[0].geometry.location,
+    						icon: new google.maps.MarkerImage('img/gmarker.png'),
+    						title: results[0].formatted_address
+			            });
+			            map.setCenter(results[0].geometry.location);
+			        } else {
+		             	//console.log('Geocode was not successful for the following reason: ' + status);
+		            }
+		        });
+        	}
+        	//HASHTAGS
+        	if (node.twitter_hashtag) {
+        		html = '<div class="detailSection"><span>Twitter HashTag</span>'; 
+        		html += '<div id="twitterHT"><a target="_blank" href="https://twitter.com/search/realtime?q=%23' + node.twitter_hashtag.replace('#','') + '&src=typd">' + node.twitter_hashtag + '</a></div>';
+				html += '</div>';
+				$('#eventDetails').append(html);
+			}
+
+			//COUNTRY INFO
+			if (node.country == "USA") {
+				mCountry = 'United States';
+			} else if (node.country === "UK") {
+				mCountry = 'United Kingdom';
+			} else {
+				mCountry = node.country;
+			}
+			html = '<div class="detailSection"><span>Country Information</span>'; 
+			html += '<table cellpadding="5" cellspacing="0" width="100%">';
+			html += '<tr><td width="25%">Country:</td><td width="25%">' + mCountry + '</td><td width="25%">ISO Codes:</td><td>' + regions[mCountry].alpha2 + ',' + regions[mCountry].alpha3 + '</td></tr>';
+			html += '<tr><td>Capital:</td><td>' + regions[mCountry].Capital + '</td><td>Population:</td><td>' + regions[mCountry].Population + '</td></tr>';
+			html += '<tr><td>Area in km²:</td><td>' + regions[mCountry]['Area in km²'] + '</td><td>Continent:</td><td>' + continents[node.region] + '</td></tr>';
+			html += '</table>';
+			html += '</div>';
+			$('#eventDetails').append(html);
+		},
+		formatDate: function(oDate) {
+			return (oDate.getMonth() + 1) + '/' + oDate.getDate() + '/' + oDate.getFullYear();
+		} 
 	};
 };
 
@@ -510,9 +607,6 @@ SWLocation = function (options) {
 	this.lng = options.lng;
 };
 
-SWLocation.prototype.getMap = function () {
-	//TODO Implement Google Maps API
-};
 
 SWFacilitator = function (options) {
 	this.id = options._id;

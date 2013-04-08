@@ -253,7 +253,11 @@ SWOOP = function () {
 						tmpDate = new Date(current.start_date);
 						aRow.push((tmpDate.getMonth() + 1) + '/' + tmpDate.getDate() + '/' + tmpDate.getFullYear());
 
-						aRow.push("<a target='_blank' href='//" + current.website + "'>" + current.website + "</a>");
+						if (current.website) {
+							aRow.push("<a target='_blank' href='//" + current.website + "'>" + current.website + "</a>");
+						} else {
+							aRow.push('');
+						}
 						aaData.push(aRow);
 					}
 					current = current.next;

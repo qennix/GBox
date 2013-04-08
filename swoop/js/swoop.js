@@ -382,24 +382,25 @@ SWOOP = function () {
 			}
 		},
 		drawCurrentEvent: function() {
-			var txt = '';
+			var txt = '', mapOptions, map;
 			if (currentNode.type === 'SWSummary') {
 				txt = '<div id="summaryMap">JJJ</div>';
 				$('#dv_data').html(txt);
 				$('#dv_data').width($('#centerPanel').width() - 70);
-				var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
-        		var mapOptions = {
-		          zoom: 4,
-		          center: myLatlng,
-		          mapTypeId: google.maps.MapTypeId.ROADMAP
-		        }
-        		var map = new google.maps.Map(document.getElementById('summaryMap'), mapOptions);
+				//var myLatlng = 
+        		mapOptions = currentNode.getMapOptions(region);
+        		// {
+		        //   zoom: 4,
+		        //   center: myLatlng,
+		        //   mapTypeId: google.maps.MapTypeId.ROADMAP
+		        // }
+        		map = new google.maps.Map(document.getElementById('summaryMap'), mapOptions);
 
-		        var marker = new google.maps.Marker({
-		            position: myLatlng,
-		            map: map,
-		            title: 'Hello World!'
-		        });
+		        // var marker = new google.maps.Marker({
+		        //     position: myLatlng,
+		        //     map: map,
+		        //     title: 'Hello World!'
+		        // });
 			} else {
 				txt += 'City: ' + currentNode.city;
 				$('#dv_data').html(txt);
@@ -492,6 +493,43 @@ SWSummary = function () {
 };
 
 SWSummary.prototype.type = "SWSummary";
+
+SWSummary.prototype.getMapOptions = function (region) {
+	var out = null, zoom = 4;
+	switch(region) {
+		case 'all':
+			out = new google.maps.LatLng(34.016242,16.523438);
+			zoom = 2;
+			break;
+		case 'NA':
+			out = new google.maps.LatLng(42.55308,-102.304687);
+			zoom = 3;
+			break;
+		case 'SA':
+			out = new google.maps.LatLng(-14.774883,-61.347656);
+			zoom = 3;
+			break;
+		case 'EU':
+			out = new google.maps.LatLng(49.496675,16.875);
+			break;
+		case 'AF':
+			out = new google.maps.LatLng(7.013668,17.753906);
+			zoom = 3;
+			break;
+		case 'AS':
+			out = new google.maps.LatLng(40.446947,83.320313);
+			zoom = 3;
+			break;
+		case 'OC':
+			out = new google.maps.LatLng(-25.363882,131.044922);
+			break;
+	}
+	return {
+		zoom: zoom,
+		center: out,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+};
 
 
 

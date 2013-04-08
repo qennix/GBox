@@ -396,11 +396,45 @@ SWOOP = function () {
 		        // }
         		map = new google.maps.Map(document.getElementById('summaryMap'), mapOptions);
 
-		        // var marker = new google.maps.Marker({
-		        //     position: myLatlng,
-		        //     map: map,
-		        //     title: 'Hello World!'
-		        // });
+        		curr = currentNode.next;
+        		while (curr) {
+        			if (curr.location.lat && curr.location.lng) {
+        				marker = new google.maps.Marker({
+        					position: new google.maps.LatLng(curr.location.lat, curr.location.lng),
+        					map: map,
+        					title: curr.city
+        				});
+        				marker.obj = curr;
+        				marker.swoop = this;
+        				google.maps.event.addListener(marker, 'click', function(event) {
+        					this.swoop.setCurrentNode(this.obj);
+  						});
+        			} else {
+        				if ((region !== 'all') || (period !== 'all')) {
+	        				geocoder = new google.maps.Geocoder();
+	        				if (curr.state) {
+	        					address = curr.city + ', ' + curr.state + ' ' + curr.country;
+	        				} else {
+	        					address = curr.city + ', ' + curr.country;
+	        				}
+	        				//aux = curr;
+	        				geocoder.geocode( { 'address': address}, function(results, status) {
+	        					//console.log(results);
+					          	if (status == google.maps.GeocoderStatus.OK) {
+						            marker = new google.maps.Marker({
+						                map: map,
+						                position: results[0].geometry.location,
+		        						icon: new google.maps.MarkerImage('img/gmarker.png'),
+		        						title: results[0].formatted_address
+						            });
+						        } else {
+					             	//console.log('Geocode was not successful for the following reason: ' + status);
+					            }
+					        });
+        				}
+        			}
+        			curr = curr.next;
+        		}
 			} else {
 				txt += 'City: ' + currentNode.city;
 				$('#dv_data').html(txt);
@@ -415,6 +449,11 @@ SWOOP = function () {
 			if (currentNode && currentNode.prev) {
 				this.getPrevNode(true);
 			}
+		},
+		setCurrentNode: function (node) {
+			currentNode = node;
+			this.drawNavBars();
+			this.drawCurrentEvent();
 		}
 	};
 };
@@ -517,11 +556,11 @@ SWSummary.prototype.getMapOptions = function (region) {
 			zoom = 3;
 			break;
 		case 'AS':
-			out = new google.maps.LatLng(40.446947,83.320313);
+			out = new google.maps.LatLng(28.921631,82.441406);
 			zoom = 3;
 			break;
 		case 'OC':
-			out = new google.maps.LatLng(-25.363882,131.044922);
+			out = new google.maps.LatLng(-30.221102,148.183594);
 			break;
 	}
 	return {
